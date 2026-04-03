@@ -8,19 +8,20 @@ import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import AnimatedFadeIn from "@/components/ui/animatedfadein";
 
 const Index = () => (
   <>
     <Navbar />
-    <Hero />
-    <Programs />
-    <Schedule />
-    <Trainers />
-    <Pricing />
-    <Testimonials />
-    <FAQ />
-    <CTA />
-    <Footer />
+    <AnimatedFadeIn><Hero /></AnimatedFadeIn>
+    <AnimatedFadeIn><Programs /></AnimatedFadeIn>
+    <AnimatedFadeIn><Schedule /></AnimatedFadeIn>
+    <AnimatedFadeIn><Trainers /></AnimatedFadeIn>
+    <AnimatedFadeIn><Pricing /></AnimatedFadeIn>
+    <AnimatedFadeIn><Testimonials /></AnimatedFadeIn>
+    <AnimatedFadeIn><FAQ /></AnimatedFadeIn>
+    <AnimatedFadeIn><CTA /></AnimatedFadeIn>
+    <AnimatedFadeIn><Footer /></AnimatedFadeIn>
   </>
 );
 

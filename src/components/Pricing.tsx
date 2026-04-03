@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useAnimation } from "@/hooks/AnimationContext";
 
 const plans = [
   {
@@ -50,8 +52,25 @@ const plans = [
   },
 ];
 
+const AnimatedPrice = ({ value }: { value: number }) => {
+  const { animationsEnabled } = useAnimation();
+
+  if (!animationsEnabled) {
+    return <span>{value}</span>;
+  }
+
+  const motionValue = useMotionValue(value);
+  const springValue = useSpring(motionValue, { stiffness: 100, damping: 20 });
+  const rounded = useTransform(springValue, (v) => Math.round(v));
+
+  motionValue.set(value);
+
+  return <motion.span>{rounded}</motion.span>;
+};
+
 const Pricing = () => {
   const [yearly, setYearly] = useState(false);
+  const { animationsEnabled } = useAnimation();
 
   return (
     <section id="pricing" className="py-24">
@@ -63,46 +82,68 @@ const Pricing = () => {
         </p>
 
         <div className="flex items-center gap-3 mb-12">
-          <button onClick={() => setYearly(false)} className={`text-sm font-medium ${!yearly ? "text-foreground" : "text-muted-foreground"}`}>Monthly</button>
+          <button
+            onClick={() => setYearly(false)}
+            className={`text-sm font-medium ${!yearly ? "text-foreground" : "text-muted-foreground"}`}
+          >
+            Monthly
+          </button>
           <button
             onClick={() => setYearly(!yearly)}
             className={`relative w-12 h-6 rounded-full transition-colors ${yearly ? "bg-primary" : "bg-muted"}`}
           >
-            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-foreground transition-transform ${yearly ? "left-[1.625rem]" : "left-0.5"}`} />
+            <span
+              className={`absolute top-0.5 w-5 h-5 rounded-full bg-foreground transition-transform ${
+                yearly ? "left-[1.625rem]" : "left-0.5"
+              }`}
+            />
           </button>
-          <button onClick={() => setYearly(true)} className={`text-sm font-medium ${yearly ? "text-foreground" : "text-muted-foreground"}`}>
+          <button
+            onClick={() => setYearly(true)}
+            className={`text-sm font-medium ${yearly ? "text-foreground" : "text-muted-foreground"}`}
+          >
             Yearly <span className="text-primary text-xs ml-1">Save 20%</span>
           </button>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl">
           {plans.map((p) => (
-            <div key={p.name} className={`relative bg-card border rounded-xl p-6 flex flex-col ${p.popular ? "border-primary ring-1 ring-primary" : "border-border"}`}>
+            <div
+              key={p.name}
+              className={`relative bg-card border rounded-xl p-6 flex flex-col ${
+                p.popular ? "border-primary ring-1 ring-primary" : "border-border"
+              }`}
+            >
               {p.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">Most Popular</span>
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
+                  Most Popular
+                </span>
               )}
               <h3 className="text-xl font-bold">{p.name}</h3>
               <p className="text-sm text-muted-foreground mb-4">{p.desc}</p>
               <div className="mb-1">
-                <span className="text-4xl font-black">${yearly ? Math.round(p.yearly / 12) : p.monthly}</span>
+                <span className="text-4xl font-black">
+                  $
+                  <AnimatedPrice value={yearly ? Math.round(p.yearly / 12) : p.monthly} />
+                </span>
                 <span className="text-muted-foreground text-sm"> /month</span>
               </div>
-              <p className="text-xs text-muted-foreground mb-6">{yearly ? `Billed annually ($${p.yearly}/year)` : "Billed monthly"}</p>
+              <p className="text-xs text-muted-foreground mb-6">
+                {yearly ? `Billed annually ($${p.yearly}/year)` : "Billed monthly"}
+              </p>
 
               <ul className="space-y-3 mb-8 flex-1">
                 {p.features.map((f) => (
                   <li key={f.text} className="flex items-center gap-2 text-sm">
-                    {f.included ? (
-                      <Check className="w-4 h-4 text-primary shrink-0" />
-                    ) : (
-                      <X className="w-4 h-4 text-muted-foreground/50 shrink-0" />
-                    )}
+                    {f.included ? <Check className="w-4 h-4 text-primary shrink-0" /> : <X className="w-4 h-4 text-muted-foreground/50 shrink-0" />}
                     <span className={f.included ? "text-foreground" : "text-muted-foreground/50"}>{f.text}</span>
                   </li>
                 ))}
               </ul>
 
-              <Button variant={p.popular ? "default" : "outline"} className="w-full">Start Free Trial</Button>
+              <Button variant={p.popular ? "default" : "outline"} className="w-full">
+                Start Free Trial
+              </Button>
             </div>
           ))}
         </div>

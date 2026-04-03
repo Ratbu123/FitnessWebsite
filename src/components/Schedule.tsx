@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { motion, AnimatePresence, Variants, Transition } from "framer-motion";
+import { useAnimation } from "@/hooks/AnimationContext";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
 const scheduleData: Record<string, { time: string; name: string; coach: string; level: string }[]> = {
   Monday: [
     { time: "6:00 AM", name: "Morning HIIT", coach: "Coach Marcus", level: "Intermediate" },
@@ -46,8 +47,24 @@ const levelColor: Record<string, string> = {
   Advanced: "bg-red-500/10 text-red-400",
 };
 
+const fadeUpTransition: Transition = {
+  duration: 0.6,
+  ease: [0.33, 1, 0.68, 1],
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { ...fadeUpTransition, delay: i * 0.1 },
+  }),
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
+};
+
 const Schedule = () => {
   const [active, setActive] = useState("Monday");
+  const { animationsEnabled } = useAnimation();
 
   return (
     <section id="schedule" className="py-24">
@@ -64,7 +81,9 @@ const Schedule = () => {
               key={d}
               onClick={() => setActive(d)}
               className={`px-5 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                active === d ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                active === d
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-muted-foreground hover:text-foreground"
               }`}
             >
               {d}
@@ -73,14 +92,27 @@ const Schedule = () => {
         </div>
 
         <div className="space-y-3">
-          {scheduleData[active].map((c, i) => (
-            <div key={i} className="flex items-center gap-4 md:gap-8 bg-card border border-border rounded-xl p-4 md:p-5 hover:border-primary/40 transition-colors">
-              <span className="text-sm text-muted-foreground w-20 shrink-0 font-medium">{c.time}</span>
-              <span className="font-semibold flex-1">{c.name}</span>
-              <span className="hidden sm:block text-sm text-muted-foreground">{c.coach}</span>
-              <span className={`text-xs px-3 py-1 rounded-full font-medium ${levelColor[c.level]}`}>{c.level}</span>
-            </div>
-          ))}
+          <AnimatePresence mode="wait">
+            {scheduleData[active].map((c, i) => (
+              <motion.div
+                key={`${active}-${i}`}
+                custom={i}
+                variants={animationsEnabled ? itemVariants : {}}
+                initial={animationsEnabled ? "hidden" : undefined}
+                animate={animationsEnabled ? "show" : undefined}
+                exit={animationsEnabled ? "exit" : undefined}
+                layout
+                className="flex items-center gap-4 md:gap-8 bg-card border border-border rounded-xl p-4 md:p-5 hover:border-primary/40 transition-colors"
+              >
+                <span className="text-sm text-muted-foreground w-20 shrink-0 font-medium">{c.time}</span>
+                <span className="font-semibold flex-1">{c.name}</span>
+                <span className="hidden sm:block text-sm text-muted-foreground">{c.coach}</span>
+                <span className={`text-xs px-3 py-1 rounded-full font-medium ${levelColor[c.level]}`}>
+                  {c.level}
+                </span>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>

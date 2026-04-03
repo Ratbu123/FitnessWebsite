@@ -13,7 +13,7 @@ const trainers = [
     role: "Yoga & Flexibility",
     exp: "8 years experience",
     desc: "Certified yoga instructor with a focus on mindful movement, mobility, and stress reduction.",
-    img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=500&fit=crop",
+    img: "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=400&h=400&fit=crop&crop=face",
   },
   {
     name: "Diego Reyes",
@@ -27,7 +27,7 @@ const trainers = [
     role: "CrossFit & HIIT",
     exp: "7 years experience",
     desc: "CrossFit Level 3 trainer passionate about functional fitness and helping athletes of all levels.",
-    img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=500&fit=crop",
+    img: "https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=400&h=400&fit=crop&crop=face",
   },
 ];
 
