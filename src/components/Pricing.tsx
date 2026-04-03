@@ -29,7 +29,7 @@ const plans = [
       { text: "All equipment & zones", included: true },
       { text: "Sauna & steam room", included: true },
       { text: "1 PT session/month", included: true },
-      { text: "IronForge app access", included: true },
+      { text: "FitHive app access", included: true },
     ],
     popular: true,
   },

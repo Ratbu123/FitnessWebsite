@@ -12,7 +12,7 @@ const Navbar = () => {
       <div className="container flex items-center justify-between h-16">
         <a href="#" className="flex items-center gap-2 text-xl font-bold text-foreground">
           <Dumbbell className="w-6 h-6 text-primary" />
-          <span>Iron<span className="text-primary">Forge</span></span>
+          <span>Fit<span className="text-primary">Hive</span></span>
         </a>
 
         <div className="hidden md:flex items-center gap-6">
